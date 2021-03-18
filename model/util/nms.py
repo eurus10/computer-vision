@@ -27,13 +27,27 @@ def nms(det, theta):
         i = index[-1]
         index.remove(i)
         keep.append(i)
+        delete = []
         for j in index:
             if IoU(det, i, j) >= theta:
-                index.remove(j)
+                delete.append(j)
+        for j in delete:
+            index.remove(j)
     return det[keep]
 
 if __name__ == "__main__":
+    import cv2
     import torch
-    det = torch.tensor([[2, 2, 2, 2, 0.9], [2, 2, 2, 4, 0.8], [3, 1, 2, 2, 0.6], [6, 2, 2, 2, 0.5]])
-    result = nms(det, 0.5)
-    print(result.tolist())
+    img = cv2.imread("1.png")
+    det = torch.tensor([[80, 280, 30, 40, 0.9],
+                        [82, 278, 32, 45, 0.8],
+                        [77, 281, 30, 38, 0.6],
+                        [260, 270, 30, 60, 0.7],
+                        [254, 273, 34, 62, 0.8]])
+    for d in det:
+        img = cv2.rectangle(img, (d[0] - d[2] / 2, d[1] - d[3] / 2), (d[0] + d[2] / 2, d[1] + d[3] / 2), (255, 255, 0), 1)
+    cv2.imwrite("1_.png", img)
+    img = cv2.imread("1.png")
+    for d in nms(det, 0.5):
+        img = cv2.rectangle(img, (d[0] - d[2] / 2, d[1] - d[3] / 2), (d[0] + d[2] / 2, d[1] + d[3] / 2), (255, 255, 0), 1)
+    cv2.imwrite("1_nms.png", img)
