@@ -139,7 +139,7 @@ def merge(r1, r2):
     return r_new
 
 # 选择搜索算法
-def selective_search(img, scale, sigma, min_size):
+def selective_search(img, scale=1, sigma=0.8, min_size=50):
     img_size = img.shape[0] * img.shape[1]
     # 图像分割
     img_mask = Felzenszwalb(img, scale, sigma, min_size)
@@ -181,5 +181,5 @@ def selective_search(img, scale, sigma, min_size):
 if __name__ == "__main__":
     import cv2
     img = cv2.imread("demo.jpg")
-    r = selective_search(img, scale=1, sigma=0.8, min_size=50)
+    r = selective_search(img)
     print(r)
